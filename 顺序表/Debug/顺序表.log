@@ -1,0 +1,8 @@
+﻿  顺序表.c
+c:\vs project\顺序表\顺序表.c(151): warning C4047: “函数”:“SList *”与“SList **”的间接级别不同
+c:\vs project\顺序表\顺序表.c(151): warning C4024: “SListFindvalue”: 形参和实参 1 的类型不同
+c:\vs project\顺序表\顺序表.c(159): warning C4047: “函数”:“SList *”与“SList **”的间接级别不同
+c:\vs project\顺序表\顺序表.c(159): warning C4024: “SListDelete”: 形参和实参 1 的类型不同
+c:\vs project\顺序表\顺序表.c(169): warning C4553: “==”: 未使用表达式结果；是否打算使用“=”?
+c:\vs project\顺序表\顺序表.c(144): warning C4172: 返回局部变量或临时变量的地址: find
+  顺序表.vcxproj -> C:\VS PROJECT\顺序表\Debug\顺序表.exe
