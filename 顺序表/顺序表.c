@@ -13,7 +13,7 @@ typedef struct SList
 void SListExpand(SList* list)
 {
 	//扩容的条件：size=capacity
-	if (list->size == list->capacity)
+	if (list->size >= list->capacity)
 	{
 		//先分配一个比原来大两倍的内存空间来存放新的顺序表
 		int Newcapacity = list->capacity * 2;
@@ -27,13 +27,9 @@ void SListExpand(SList* list)
 		list->arr = Newarr;
 		list->capacity = Newcapacity;
 	}
+	printf("%d\n", list->capacity);
 	return;
 }
-
-
-
-
-
 
 
 //初始化顺序表:将有效元素的个数置空
@@ -114,49 +110,39 @@ void SListDelete(SList *list, int pos)
 
 
 //查找某一个值：遍历顺序表
-typedef struct Find			//用来记录要查找的数字的信息，该数字的个数以及位置
+int* SListFindvalue(SList *list, int value)
 {
-	int count;
-	int *find_pos;
-}Find;
-Find* SListFindvalue(SList *list, int value)
-{
-	int i = 0;
-	Find find;
-	find.count = 0;
-	Find *find_add=&find;
-	find_add->find_pos = (int*)malloc(sizeof(int)*list->size);//为存储位置信息的变量分配内存
-	assert(find_add->find_pos != NULL);
-	for (i = 0; i < list->size; i++)
-	{
-		//遍历整个顺序表，找寻value
-		if (list->arr[i] == value)
-		{
-			//将value的下标存放在find_pos数组中
-			find.find_pos[find.count] = i;
-			find.count++;			
+	//
+	int i,j;
+	int *count = (int *)malloc(sizeof(int)*list->size);		//用来记录已查到目标数字的下标
+	for (i = 0,j = 0; i < list->size; ++i) {
+		if (list->arr[i] == value) {
+			count[j] = i;
+			printf("找到该数，下标是：%d  \n", count[j]);			
+			++j;
+		}
+		else if (i >= list->size) {
+			free(count);		//如果查无此数，就释放用来记录下标的数组的空间
+			count = NULL;		//并且让其指向空
+			printf("未找到该数！！！\n");
+			return NULL;
 		}
 	}
-	if (find.count == 0)
-	{
-		return NULL;
-	}
-	return find_add;
 }
 
 //删除顺序表中的某一个值:只删除第一次遇到该数的时候
 void SListDeletevalue(SList *list, int value)
 {
 	//先查询此数
-	Find * findvalue = SListFindvalue(&list, value);
-	if (findvalue->count == 0)
+	int* findvalue = SListFindvalue(&list, value);
+	if (findvalue == NULL)
 	{
 		printf("查无此数，无法删除！！！\n");
 	}
-	else if (findvalue->count > 0)
+	else if (findvalue != NULL)
 	{
 		//开始进行删除操作：只删除第一个
-		SListDelete(&list, findvalue->find_pos[0]);
+		SListDelete(&list, findvalue[0]);
 	}
 	return;
 }
@@ -194,8 +180,6 @@ void SListPrint(SList *list)
 
 
 
-
-
 int main()
 {
 	SList list;
@@ -206,27 +190,15 @@ int main()
 	SListInsertTail(&list, 20);		//尾插
 	SListInsert(&list, 1, 30);		//指定位置插入
 	SListPrint(&list);				//打印顺序表
-
-	Find *find_value = SListFindvalue(&list, 10);		//查找某个值
-	if (find_value->count == 0)
-	{
-		printf("查无此数！！！\n");
-	}
-	else if (find_value->count > 0)
-	{
-		printf("顺序表中一共有%d个该数字！！！\n下标分别是：\n",find_value->count);
-		for (int i = 0; i < find_value->count; i++)
-		{		
-			printf("%-3d", find_value->find_pos[i]);
-		}
-	}
+	SListExpand(&list);
+	SListFindvalue(&list, 10);
 
 	//SListDeleteFront(&list);		//头删
 	//SListDeleteTail(&list);			//尾删
-	//SListDelete(&list, 1);			//指定位置删除
+	SListDelete(&list, 1);			//指定位置删除
 
 	//SListDestory(&list);			//销毁
-	//SListPrint(&list);				//打印顺序表
+	SListPrint(&list);				//打印顺序表
 	system("pause");
 	return 0;
 }
